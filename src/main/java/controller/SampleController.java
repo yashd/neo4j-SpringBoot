@@ -155,7 +155,7 @@ public class SampleController {
         params.put("familyName",familyName);
         params.put("givenName",givenName);
 
-        String query="MATCH (author:Author)-[:AUTHOR]->(work:Work) WHERE author.givenName = {givenName}  and author.familyName={familyName}" +
+        String query="MATCH (contributor:Contributor)-[:AUTHOR]->(work:WORK) WHERE contributor.givenName = {givenName}  and contributor.familyName={familyName}" +
                 " RETURN work";
 
 
@@ -190,8 +190,8 @@ public class SampleController {
         params.put("familyName",familyName);
         params.put("givenName",givenName);
 
-        String query="MATCH (author:Author) WHERE author.givenName = {givenName}  and author.familyName={familyName}" +
-                " RETURN author";
+        String query="MATCH (contributor:Contributor) WHERE contributor.givenName = {givenName}  and contributor.familyName={familyName}" +
+                " RETURN contributor";
 
 
         StatementResult result = session.run( query,params );
@@ -200,7 +200,7 @@ public class SampleController {
         {
 
             Record record = result.next();
-            Node node=(Node)record.asMap().get("author");
+            Node node=(Node)record.asMap().get("contributor");
 
 
 
