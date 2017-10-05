@@ -143,6 +143,76 @@ public class SampleController {
 
 
 
+    @RequestMapping(value="/author/familyName/{familyName}/givenName/{givenName}/works", method = RequestMethod.GET)
+    @ResponseBody
+    List<Work> getWorksbyAuthorName(@PathVariable String familyName,@PathVariable String givenName){
+
+
+        List<Work> works_list=new ArrayList<Work>();
+
+
+        Map<String ,Object> params=new HashMap();
+        params.put("familyName",familyName);
+        params.put("givenName",givenName);
+
+        String query="MATCH (author:Author)-[:AUTHOR]->(work:Work) WHERE author.givenName = {givenName}  and author.familyName={familyName}" +
+                " RETURN work";
+
+
+        StatementResult result = session.run( query,params );
+
+        while ( result.hasNext() )
+        {
+
+            Record record = result.next();
+            Node node=(Node)record.asMap().get("work");
+
+            Work work=new Work();
+            work.setDOI(node.get( "DOI" ).toString());
+
+            works_list.add(work);
+        }
+
+        System.out.println("Code is completed");
+
+        return works_list;
+    }
+
+
+    @RequestMapping(value="/author/familyName/{familyName}/givenName/{givenName}", method = RequestMethod.GET)
+    @ResponseBody
+    Author getAuthorbyName(@PathVariable String familyName,@PathVariable String givenName){
+
+
+        Author author;
+        author = new Author();
+        Map<String ,Object> params=new HashMap();
+        params.put("familyName",familyName);
+        params.put("givenName",givenName);
+
+        String query="MATCH (author:Author) WHERE author.givenName = {givenName}  and author.familyName={familyName}" +
+                " RETURN author";
+
+
+        StatementResult result = session.run( query,params );
+
+        while ( result.hasNext() )
+        {
+
+            Record record = result.next();
+            Node node=(Node)record.asMap().get("author");
+
+
+
+            author.setFamilyName(node.get( "familyName" ).toString());
+            author.setGivenName(node.get( "givenName" ).toString());
+        }
+
+        System.out.println("Code is completed");
+
+        return author;
+    }
+
 
 
 
